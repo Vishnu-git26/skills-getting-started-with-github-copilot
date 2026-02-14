@@ -16,24 +16,35 @@ document.addEventListener("DOMContentLoaded", () => {
       // Populate activities list
       Object.entries(activities).forEach(([name, details]) => {
         const activityCard = document.createElement("div");
-        activityCard.className = "activity-card";
+  activityCard.className = "activity-card";
 
-        const spotsLeft = details.max_participants - details.participants.length;
+  const spotsLeft = details.max_participants - details.participants.length;
 
-        activityCard.innerHTML = `
-          <h4>${name}</h4>
-          <p>${details.description}</p>
-          <p><strong>Schedule:</strong> ${details.schedule}</p>
-          <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
-        `;
+  // Build participants list HTML
+  const participantsList = details.participants.length > 0
+    ? details.participants.map(p => `<li>${p}</li>`).join("")
+    : "<li><em>No participants yet</em></li>";
 
-        activitiesList.appendChild(activityCard);
+  activityCard.innerHTML = `
+    <h4>${name}</h4>
+    <p>${details.description}</p>
+    <p><strong>Schedule:</strong> ${details.schedule}</p>
+    <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+    <div class="participants-section">
+      <strong>Participants:</strong>
+      <ul class="participants-list">
+        ${participantsList}
+      </ul>
+    </div>
+  `;
 
-        // Add option to select dropdown
-        const option = document.createElement("option");
-        option.value = name;
-        option.textContent = name;
-        activitySelect.appendChild(option);
+  activitiesList.appendChild(activityCard);
+
+  // Add option to select dropdown
+  const option = document.createElement("option");
+  option.value = name;
+  option.textContent = name;
+  activitySelect.appendChild(option);
       });
     } catch (error) {
       activitiesList.innerHTML = "<p>Failed to load activities. Please try again later.</p>";
